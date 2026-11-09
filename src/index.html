@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; media-src 'self' blob:"
+  />
+  <title>Photo Booth</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ============ STAFF SIDE ============ -->
+
+  <!-- ADMIN DASHBOARD (first page) -->
+  <section id="screen-dashboard" class="screen">
+    <div class="panel-page">
+      <header class="bar">
+        <div>
+          <h2>Staff dashboard</h2>
+          <p class="hint" id="dashSub"></p>
+        </div>
+        <button id="startEvent" class="btn-primary">Start event</button>
+      </header>
+      <nav class="tabs" id="dashTabs">
+        <button class="tab on" data-tab="templates">Templates</button>
+        <button class="tab" data-tab="dslr">DSLR / Camera</button>
+        <button class="tab" data-tab="event">Event settings</button>
+      </nav>
+      <div id="dashBody" class="dash-body"></div>
+    </div>
+  </section>
+
+  <!-- LAYOUT EDITOR -->
+  <section id="screen-editor" class="screen">
+    <div class="panel-page">
+      <header class="bar">
+        <h2>Edit template</h2>
+        <div class="row">
+          <button id="edBack" class="btn-ghost">Back</button>
+          <button id="edSave" class="btn-primary small">Save</button>
+        </div>
+      </header>
+      <div class="editor">
+        <aside id="edSide"></aside>
+        <div class="ed-stage-wrap">
+          <div id="edStage">
+            <canvas id="edCanvas"></canvas>
+            <div id="edBoxes"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CUSTOMER SIDE ============ -->
+
+  <!-- 1. Customer scene: live camera preview + Start -->
+  <section id="screen-scene" class="screen">
+    <video id="sceneCam" autoplay playsinline muted></video>
+    <p id="sceneEvent" class="scene-top"></p>
+    <button id="sceneStart" class="btn-hero scene-btn">Start</button>
+  </section>
+
+  <!-- 2. Pick the size: strip or photocard -->
+  <section id="screen-size" class="screen">
+    <div class="center-col">
+      <h2>Choose your print</h2>
+      <div id="sizeCards" class="size-cards"></div>
+      <button id="sizeBack" class="btn-ghost">Back</button>
+    </div>
+  </section>
+
+  <!-- 3. Pick the template, then Start -->
+  <section id="screen-template" class="screen">
+    <div class="tpl-layout">
+      <aside id="tplList" class="tpl-list"></aside>
+      <div class="tpl-main">
+        <h2 id="tplTitle"></h2>
+        <div id="tplPreviewWrap"><canvas id="tplPreview"></canvas></div>
+        <div class="row">
+          <button id="tplBack" class="btn-ghost">Back</button>
+          <button id="tplStart" class="btn-primary big">Start</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Taking the photos -->
+  <section id="screen-capture" class="screen">
+    <div class="capture-layout">
+      <div class="stage">
+        <video id="cam" autoplay playsinline muted></video>
+        <div id="countdown"></div>
+        <div id="flash"></div>
+        <div id="captureStatus"></div>
+        <button id="captureCancel" class="btn-ghost cancel">Cancel</button>
+      </div>
+      <div id="slotRail"></div>
+    </div>
+  </section>
+
+  <!-- 5. Review: tap a photo to retake exactly that one -->
+  <section id="screen-review" class="screen">
+    <div class="review-layout">
+      <div class="review-main">
+        <h2>Tap a photo to retake it</h2>
+        <div id="previewWrap">
+          <canvas id="previewCanvas"></canvas>
+          <div id="hitLayer"></div>
+        </div>
+      </div>
+      <aside class="review-side">
+        <p id="retakeInfo" class="hint"></p>
+        <button id="reviewNext" class="btn-primary">Next</button>
+        <button id="reviewRestart" class="btn-ghost">Start over</button>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 6. Optional filter -->
+  <section id="screen-filter" class="screen">
+    <div class="review-layout">
+      <div class="review-main">
+        <h2>Pick a filter (optional)</h2>
+        <div class="canvas-wrap"><canvas id="filterCanvas"></canvas></div>
+      </div>
+      <aside class="review-side">
+        <h3>Filters</h3>
+        <div id="filterChips" class="chips"></div>
+        <button id="filterNext" class="btn-primary">Next</button>
+        <button id="filterSkip" class="btn-ghost">Skip, no filter</button>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 7. Print option -->
+  <section id="screen-print" class="screen">
+    <div class="review-layout">
+      <div class="review-main">
+        <div class="canvas-wrap"><canvas id="printCanvas"></canvas></div>
+      </div>
+      <aside class="review-side wide">
+        <h2>Print option</h2>
+        <button id="optPrint" class="opt on">
+          <span class="big">Print my photos</span>
+          <span class="cap12" id="printCap"></span>
+        </button>
+        <div id="copiesRow" class="stepper">
+          <button id="copiesMinus">−</button>
+          <span id="copiesNum">1</span>
+          <button id="copiesPlus">+</button>
+          <small id="copiesLbl" class="hint"></small>
+        </div>
+        <button id="optDigital" class="opt">
+          <span class="big">No print</span>
+          <span class="cap12">Digital copy only, scan the QR code</span>
+        </button>
+        <button id="printDone" class="btn-primary">Done</button>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 8. Finish, then back to the customer scene -->
+  <section id="screen-finish" class="screen">
+    <div class="finish-layout">
+      <div class="finish-preview"><img id="finalImg" alt="" /></div>
+      <aside class="finish-side">
+        <h2 id="finishTitle">Making your photos…</h2>
+        <ul id="finishSteps"></ul>
+        <div id="qrRow"></div>
+        <button id="finishDone" class="btn-primary" disabled>Done</button>
+        <p id="resetNote" class="hint"></p>
+      </aside>
+    </div>
+  </section>
+
+  <script src="js/app.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/dslr.js"></script>
+  <script src="js/customer.js"></script>
+  <script src="js/booth.js"></script>
+  <script src="js/editor.js"></script>
+  <script src="js/boot.js"></script>
+</body>
+</html>

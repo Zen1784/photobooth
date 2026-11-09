@@ -1,20 +1,15 @@
 {
   "name": "photobooth",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.2.0",
+  "description": "Photo booth app with slot-based retake, QR codes and 4R printing",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "devDependencies": {
-    "electron": "^45.2.3"
+    "electron": "^33.0.0"
   },
   "dependencies": {
-    "electron-store": "^12.0.0",
-    "sharp": "^0.35.5"
-}
+    "qrcode": "^1.5.4"
+  }
 }
